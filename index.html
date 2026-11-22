@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Mission Planner</title>
+<style>
+:root{--bg:#080d18;--panel:#111a2b;--panel2:#172238;--line:#263550;--text:#f4f7ff;--muted:#9aa9c2;--accent:#8b9cff;--green:#48d6a0}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 15% 0%,#1a2850 0,transparent 35%),var(--bg);color:var(--text);font:15px/1.5 "Segoe UI",Arial,sans-serif;padding:28px}
+.wrap{max-width:1050px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.eyebrow{color:var(--muted);font-size:12px;letter-spacing:2px;text-transform:uppercase}.clock{font-size:14px;color:var(--muted);text-align:right}.hero{background:linear-gradient(125deg,#18294a,#121b30 65%);border:1px solid var(--line);border-radius:22px;padding:30px;margin-bottom:18px}.hero h1{font-size:clamp(32px,6vw,54px);line-height:1.04;margin:8px 0 10px;letter-spacing:-1.5px}.hero p{color:var(--muted);margin:0}.tag{display:inline-block;color:#c5ceff;background:#303d70;padding:5px 10px;border-radius:99px;font-size:11px;letter-spacing:1px;font-weight:700}.grid{display:grid;grid-template-columns:1.35fr .8fr;gap:18px}.card{background:rgba(17,26,43,.94);border:1px solid var(--line);border-radius:18px;padding:22px}.card h2{font-size:17px;margin:0 0 5px}.sub{font-size:13px;color:var(--muted);margin:0 0 18px}.progressrow{display:flex;justify-content:space-between;align-items:end;margin:18px 0 8px}.percent{font-size:27px;font-weight:800;color:var(--green)}.track{height:9px;background:#26334b;border-radius:99px;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#48d6a0,#8b9cff);transition:width .2s}.tasks{display:grid;gap:9px;margin:18px 0}.task{display:flex;align-items:center;gap:11px;background:var(--panel2);border:1px solid transparent;padding:11px 12px;border-radius:12px}.task:hover{border-color:#405174}.task input{width:18px;height:18px;accent-color:var(--green);flex-shrink:0}.task span{flex:1;overflow-wrap:anywhere}.task.done span{text-decoration:line-through;color:#8190a9}.del{border:0;background:transparent;color:#8090aa;cursor:pointer;font-size:19px}.del:hover{color:#ff8795}.add{display:flex;gap:8px}.add input,.note{min-width:0;width:100%;background:#0c1423;border:1px solid var(--line);border-radius:10px;color:var(--text);padding:12px;font:inherit;outline:none}.add input:focus,.note:focus{border-color:var(--accent)}button{font:inherit;cursor:pointer}.primary{background:var(--accent);color:#091020;border:0;border-radius:10px;padding:0 16px;font-weight:800}.primary:hover{filter:brightness(1.1)}.priority{display:grid;gap:10px;margin-top:15px}.priority label{font-size:12px;color:var(--muted)}.note{resize:vertical;min-height:76px;margin-top:6px}.quote{margin-top:18px;padding:17px;border-left:3px solid var(--accent);background:#0c1423;border-radius:0 12px 12px 0;color:#dce3ff;font-weight:600}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}.secondary{border:1px solid var(--line);background:#172238;color:var(--text);border-radius:10px;padding:10px 13px}.secondary:hover{border-color:#6577a5}.foot{text-align:center;color:#71809a;font-size:12px;margin:20px 0 0}
+@media(max-width:760px){body{padding:16px}.grid{grid-template-columns:1fr}.top{align-items:flex-start}.hero{padding:23px}.card{padding:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div><div class="eyebrow">Your personal command centre</div><strong>DAILY MISSION PLANNER</strong></div>
+    <div class="clock"><div id="date"></div><strong id="clock"></strong></div>
+  </div>
+  <section class="hero">
+    <span class="tag">ONE DAY AT A TIME</span>
+    <h1>BUILD YOUR<br>FUTURE.</h1>
+    <p>Small promises. Kept daily. Big results over time.</p>
+  </section>
+  <section class="grid" style="grid-template-columns:1fr 1fr;margin-bottom:18px">
+    <section class="card">
+      <div class="eyebrow">COUNTDOWN • CLASS 10</div>
+      <h2 style="font-size:20px;margin:5px 0">Your board exams</h2>
+      <div id="countdown10" style="font-size:clamp(27px,5vw,38px);font-weight:850;color:var(--green);letter-spacing:-1px">-- days</div>
+      <p class="sub" style="margin:4px 0 0">First exam: 16 February 2027</p>
+    </section>
+    <section class="card">
+      <div class="eyebrow">COUNTDOWN • CLASS 12</div>
+      <h2 style="font-size:20px;margin:5px 0">Barshaa's board exams</h2>
+      <div id="countdown12" style="font-size:clamp(27px,5vw,38px);font-weight:850;color:var(--accent);letter-spacing:-1px">-- days</div>
+      <p class="sub" style="margin:4px 0 0">First exam: 16 February 2027</p>
+    </section>
+  </section>
+  <main class="grid">
+    <section class="card">
+      <h2>Today's missions</h2><p class="sub">Keep the list realistic. Finish what matters.</p>
+      <div class="progressrow"><div><div class="eyebrow">Your progress</div><strong id="count">0 of 5 completed</strong></div><div class="percent" id="percent">0%</div></div>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <div class="tasks" id="tasks"></div>
+      <form class="add" id="addForm"><input id="newTask" maxlength="100" placeholder="Add a mission…" autocomplete="off"><button class="primary" type="submit">Add</button></form>
+      <div class="actions"><button class="secondary" id="clearDone">Clear completed</button><button class="secondary" id="resetDay">Reset today's list</button></div>
+    </section>
+    <aside>
+      <section class="card">
+        <h2>Top priorities</h2><p class="sub">Your three most important things today.</p>
+        <div class="priority">
+          <div><label for="p1">PRIORITY 01</label><input class="note" id="p1" placeholder="The most important task"></div>
+          <div><label for="p2">PRIORITY 02</label><input class="note" id="p2" placeholder="Second important task"></div>
+          <div><label for="p3">PRIORITY 03</label><input class="note" id="p3" placeholder="Third important task"></div>
+        </div>
+      </section>
+      <section class="card" style="margin-top:18px">
+        <h2>Your bigger goal</h2><p class="sub">A reminder of what you're working towards.</p>
+        <div class="quote">IIT BOMBAY. Build the skills. Earn the opportunity. Keep showing up.</div>
+        <p class="sub" style="margin:15px 0 0">You don't need a perfect day. You need a day where you make progress.</p>
+      </section>
+    </aside>
+  </main>
+  <div class="foot">Your planner saves automatically in this browser on this device.</div>
+</div>
+<script>
+const KEY='dailyMissionPlanner_v1';
+const today=()=>new Date().toLocaleDateString('en-CA');
+const defaults=['Maths — 15 NCERT questions','Physics — revise one concept','Chemistry — 30 minutes','JEE preparation — 30 minutes','Quick revision before sleep'];
+let data={};
+try{data=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){data={}}
+if(data.date!==today()){data={date:today(),tasks:defaults.map(t=>({text:t,done:false})),priorities:['','','']};save()}
+if(!Array.isArray(data.tasks))data.tasks=defaults.map(t=>({text:t,done:false}));
+if(!Array.isArray(data.priorities))data.priorities=['','',''];
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+const tasksEl=document.getElementById('tasks');
+function render(){
+ tasksEl.innerHTML='';
+ data.tasks.forEach((task,i)=>{
+  const row=document.createElement('div');row.className='task'+(task.done?' done':'');
+  const check=document.createElement('input');check.type='checkbox';check.checked=!!task.done;check.setAttribute('aria-label','Mark task complete');
+  check.addEventListener('change',()=>{task.done=check.checked;save();render()});
+  const span=document.createElement('span');span.textContent=task.text;
+  const del=document.createElement('button');del.className='del';del.type='button';del.textContent='×';del.title='Delete task';del.addEventListener('click',()=>{data.tasks.splice(i,1);save();render()});
+  row.append(check,span,del);tasksEl.append(row);
+ });
+ const done=data.tasks.filter(t=>t.done).length,total=data.tasks.length,pct=total?Math.round(done/total*100):0;
+ document.getElementById('count').textContent=`${done} of ${total} completed`;
+ document.getElementById('percent').textContent=pct+'%';
+ document.getElementById('fill').style.width=pct+'%';
+}
+document.getElementById('addForm').addEventListener('submit',e=>{
+ e.preventDefault();const input=document.getElementById('newTask');const text=input.value.trim();if(!text)return;
+ data.tasks.push({text,done:false});input.value='';save();render();
+});
+document.getElementById('clearDone').addEventListener('click',()=>{data.tasks=data.tasks.filter(t=>!t.done);save();render()});
+document.getElementById('resetDay').addEventListener('click',()=>{if(confirm("Reset today's tasks and priorities?")){data={date:today(),tasks:defaults.map(t=>({text:t,done:false})),priorities:['','','']};save();loadPriorities();render()}});
+function loadPriorities(){['p1','p2','p3'].forEach((id,i)=>{document.getElementById(id).value=data.priorities[i]||''})}
+['p1','p2','p3'].forEach((id,i)=>document.getElementById(id).addEventListener('input',e=>{data.priorities[i]=e.target.value;save()}));
+function updateCountdowns(){
+ const examDate = new Date(2027, 1, 16); // 16 February 2027, local time
+ const now = new Date();
+ const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+ const days = Math.max(0, Math.ceil((examDate - todayStart) / 86400000));
+ const label = days === 1 ? '1 DAY LEFT' : `${days} DAYS LEFT`;
+ document.getElementById('countdown10').textContent = days === 0 ? 'EXAM DAY' : label;
+ document.getElementById('countdown12').textContent = days === 0 ? 'EXAM DAY' : label;
+}
+function tick(){
+ const now=new Date();document.getElementById('date').textContent=now.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+ document.getElementById('clock').textContent=now.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+ updateCountdowns();
+}
+loadPriorities();render();tick();setInterval(tick,1000);
+</script>
+</body>
+</html>
